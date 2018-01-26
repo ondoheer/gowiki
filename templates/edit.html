@@ -1,3 +1,6 @@
+{{define "title"}} Editing {{.Title}} {{end}}
+
+{{define "body"}}
 <h1>Editing {{.Title}}</h1>
 
 <form action="/save/{{.Title}}" method="POST">
@@ -8,3 +11,5 @@
         <input type="submit" value="Save">
     </div>
 </form>
+
+{{end}}

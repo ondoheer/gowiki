@@ -22,6 +22,7 @@ var dataBaseDir = "data"
 func templateRoutes() []string {
 
 	paths := []string{
+
 		filepath.Join(templateBaseDir, "edit.html"),
 		filepath.Join(templateBaseDir, "view.html"),
 	}
