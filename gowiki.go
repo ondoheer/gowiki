@@ -7,6 +7,7 @@ import (
 	"html/template"
 	"io/ioutil"
 	"net/http"
+	"path/filepath"
 	"regexp"
 )
 
@@ -15,14 +16,31 @@ type Page struct {
 	Body  []byte
 }
 
+var templateBaseDir = "templates"
+var dataBaseDir = "data"
+
+func templateRoutes() []string {
+
+	paths := []string{
+		filepath.Join(templateBaseDir, "edit.html"),
+		filepath.Join(templateBaseDir, "view.html"),
+	}
+
+	return paths
+}
+
+func generateArticlePath(title string) string {
+	return filepath.Join(dataBaseDir, title+".txt")
+}
+
 // Globals
-var templates = template.Must(template.ParseFiles("edit.html", "view.html"))
+var templates = template.Must(template.ParseFiles(templateRoutes()...))
 
 var validPath = regexp.MustCompile("^/(edit|save|view)/([a-zA-Z0-9]+)$")
 
 func (p *Page) save() error {
 
-	filename := p.Title + ".txt"
+	filename := generateArticlePath(p.Title)
 
 	return ioutil.WriteFile(filename, p.Body, 0600)
 
@@ -41,7 +59,7 @@ func getTitle(w http.ResponseWriter, r *http.Request) (string, error) {
 
 func loadPage(title string) (*Page, error) {
 
-	filename := title + ".txt"
+	filename := generateArticlePath(title)
 
 	body, err := ioutil.ReadFile(filename)
 
